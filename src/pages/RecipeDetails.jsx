@@ -1,14 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState, useContext } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import { AppContext } from '../context/AppProvider';
 import styles from './RecipeDetails.module.css';
 import shareIcon from '../images/shareIcon.svg';
-import favoriteIcon from '../images/blackHeartIcon.svg';
+import favoriteIcon from '../images/whiteHeartIcon.svg';
+import favoriteIconBlack from '../images/blackHeartIcon.svg';
 
 export default function RecipeDetails() {
   const location = useLocation();
-  const [recipe, setRecipe] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
+  const history = useHistory();
+
+  const favorites = JSON.parse(localStorage.getItem('favoriteRecipes')) || [];
+
+  const { recipe, setRecipe, ingredients, setIngredients } = useContext(AppContext);
   const [recommendations, setRecommendations] = useState([]);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [copied, setCopied] = useState(false);
+
   const recipeID = location.pathname.split('/')[2];
   const pathname = location.pathname.split('/')[1];
 
@@ -49,12 +57,9 @@ export default function RecipeDetails() {
               && data.meals[0][item] !== null && data.meals[0][item] !== ''
       ));
       setIngredients(getIngredients);
-
       fetchRecommendations();
-
       return;
     }
-
     if (pathname === 'drinks') {
       const request = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${recipeID}`);
       const data = await request.json();
@@ -65,9 +70,45 @@ export default function RecipeDetails() {
               && data.drinks[0][item] !== null && data.drinks[0][item] !== ''
       ));
       setIngredients(getIngredients);
-
       fetchRecommendations();
     }
+  };
+
+  const favoriteRecipe = () => {
+    if (pathname === 'meals') {
+      const favorite = {
+        id: recipe[0].idMeal,
+        type: 'meal',
+        nationality: recipe[0].strArea || '',
+        category: recipe[0].strCategory,
+        alcoholicOrNot: '',
+        name: recipe[0].strMeal,
+        image: recipe[0].strMealThumb,
+      };
+      favorites.push(favorite);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(favorites));
+      setIsFavorite(!isFavorite);
+    }
+    if (pathname === 'drinks') {
+      const favorite = {
+        id: recipe[0].idDrink,
+        type: 'drink',
+        nationality: recipe[0].strArea || '',
+        category: recipe[0].strCategory,
+        alcoholicOrNot: recipe[0].strAlcoholic,
+        name: recipe[0].strDrink,
+        image: recipe[0].strDrinkThumb,
+      };
+      favorites.push(favorite);
+      localStorage.setItem('favoriteRecipes', JSON.stringify(favorites));
+      setIsFavorite(!isFavorite);
+    }
+  };
+
+  const copyURL = () => {
+    setCopied(true);
+    const { href } = window.location;
+    navigator.clipboard.writeText(href);
   };
 
   useEffect(() => {
@@ -79,11 +120,21 @@ export default function RecipeDetails() {
       { pathname === 'meals'
         ? recipe.map((item, index) => (
           <div key={ index }>
-            <button data-testid="share-btn">
+            <button data-testid="share-btn" onClick={ copyURL }>
               <img src={ shareIcon } alt="" />
             </button>
-            <button data-testid="favorite-btn">
-              <img src={ favoriteIcon } alt="" />
+            {copied && <p>Link copied!</p>}
+            <button
+              data-testid="favorite-btn"
+              onClick={ favoriteRecipe }
+              src={ favorites.some((favorite) => favorite.id === recipe[0].idMeal)
+                ? favoriteIconBlack : favoriteIcon }
+            >
+              <img
+                src={ favorites.some((favorite) => favorite.id === recipe[0].idMeal)
+                  ? favoriteIconBlack : favoriteIcon }
+                alt=""
+              />
             </button>
             <img src={ item.strMealThumb } alt="" data-testid="recipe-photo" />
             <h4 data-testid="recipe-title">{item.strMeal}</h4>
@@ -124,17 +175,28 @@ export default function RecipeDetails() {
             <button
               data-testid="start-recipe-btn"
               className={ styles.startRecipeBtn }
+              onClick={ () => history.push(`/meals/${recipeID}/in-progress`) }
             >
               Start Recipe
             </button>
           </div>
         )) : recipe.map((item, index) => (
           <div key={ index }>
-            <button data-testid="share-btn">
+            <button data-testid="share-btn" onClick={ copyURL }>
               <img src={ shareIcon } alt="" />
             </button>
-            <button data-testid="favorite-btn">
-              <img src={ favoriteIcon } alt="" />
+            {copied && <p>Link copied!</p>}
+            <button
+              data-testid="favorite-btn"
+              onClick={ favoriteRecipe }
+              src={ favorites.some((favorite) => favorite.id === recipe[0].idDrink)
+                ? favoriteIconBlack : favoriteIcon }
+            >
+              <img
+                src={ favorites.some((favorite) => favorite.id === recipe[0].idDrink)
+                  ? favoriteIconBlack : favoriteIcon }
+                alt=""
+              />
             </button>
             <img src={ item.strDrinkThumb } alt="" data-testid="recipe-photo" />
             <h4 data-testid="recipe-title">{item.strDrink}</h4>
@@ -174,6 +236,7 @@ export default function RecipeDetails() {
             <button
               data-testid="start-recipe-btn"
               className={ styles.startRecipeBtn }
+              onClick={ () => history.push(`/drinks/${recipeID}/in-progress`) }
             >
               Start Recipe
             </button>
