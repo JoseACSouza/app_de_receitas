@@ -6,13 +6,19 @@ export const AppContext = createContext();
 function AppProvider({ children }) {
   const [recipes, setRecipes] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
+  const [recipe, setRecipe] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
   const values = useMemo(() => ({
     recipes,
     setRecipes,
     isVisible,
     setIsVisible,
-  }), [recipes, setRecipes, isVisible]);
+    recipe,
+    setRecipe,
+    ingredients,
+    setIngredients,
+  }), [recipes, setRecipes, isVisible, recipe, ingredients]);
 
   return (
     <AppContext.Provider value={ values }>
