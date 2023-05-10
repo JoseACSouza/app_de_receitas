@@ -7,6 +7,9 @@ import DoneRecipes from '../pages/DoneRecipes';
 
 describe('verifica a pagina done-recipes', () => {
   const horizontal = '0-horizontal-name';
+  const hImg = '0-horizontal-image';
+  const hTop = '0-horizontal-top-text';
+  const hDone = '0-horizontal-done-date';
   const image1 = 'https://www.thecocktaildb.com/images/media/drink/zvsre31572902738.jpg';
   const soup = 'soup vegetarian';
   const share = '0-horizontal-share-btn';
@@ -71,9 +74,9 @@ describe('verifica a pagina done-recipes', () => {
       </AppProvider>,
     );
     expect(screen.getByTestId(horizontal)).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-image')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-top-text')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-done-date')).toBeInTheDocument();
+    expect(screen.getByTestId(hImg)).toBeInTheDocument();
+    expect(screen.getByTestId(hTop)).toBeInTheDocument();
+    expect(screen.getByTestId(hDone)).toBeInTheDocument();
     expect(screen.getByTestId(share)).toBeInTheDocument();
     expect(screen.getByTestId('0-vegetarian-horizontal-tag')).toBeInTheDocument();
   });
@@ -98,9 +101,9 @@ describe('verifica a pagina done-recipes', () => {
       </AppProvider>,
     );
     expect(screen.getByTestId(horizontal)).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-image')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-top-text')).toBeInTheDocument();
-    expect(screen.getByTestId('0-horizontal-done-date')).toBeInTheDocument();
+    expect(screen.getByTestId(hImg)).toBeInTheDocument();
+    expect(screen.getByTestId(hTop)).toBeInTheDocument();
+    expect(screen.getByTestId(hDone)).toBeInTheDocument();
     expect(screen.getByTestId(share)).toBeInTheDocument();
   });
   test('verifica o funcionamento dos filtros', () => {
@@ -176,9 +179,9 @@ describe('verifica a pagina done-recipes', () => {
       </AppProvider>,
     );
     expect(screen.queryByTestId(horizontal)).toBeNull();
-    expect(screen.queryByTestId('0-horizontal-image')).toBeNull();
-    expect(screen.queryByTestId('0-horizontal-top-text')).toBeNull();
-    expect(screen.queryByTestId('0-horizontal-done-date')).toBeNull();
+    expect(screen.queryByTestId(hImg)).toBeNull();
+    expect(screen.queryByTestId(hTop)).toBeNull();
+    expect(screen.queryByTestId(hDone)).toBeNull();
     expect(screen.queryByTestId(share)).toBeNull();
   });
   test('compartilha o link ao clicar no botão de compartilhamento', () => {
