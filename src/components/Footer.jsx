@@ -15,6 +15,7 @@ export default function Footer() {
           src={ drinkIcon }
           alt=""
           data-testid="drinks-bottom-btn"
+          name="drinks"
         />
       </Link>
       <Link to="/meals">
@@ -22,6 +23,7 @@ export default function Footer() {
           src={ mealIcon }
           alt=""
           data-testid="meals-bottom-btn"
+          name="meals"
         />
       </Link>
     </footer>

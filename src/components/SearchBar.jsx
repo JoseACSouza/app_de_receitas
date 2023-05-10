@@ -138,6 +138,7 @@ export default function SearchBar() {
       <button
         data-testid="exec-search-btn"
         onClick={ fetchByFilter }
+        name="search-btn"
       >
         Search
       </button>
