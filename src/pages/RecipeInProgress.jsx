@@ -9,6 +9,10 @@ export default function RecipeInProgress() {
   const { recipe, setRecipe, ingredients, setIngredients } = useContext(AppContext);
   const [isFavorite, setIsFavorite] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [allChecked, setAllChecked] = useState(false);
+  const ingredientsChecked = JSON.parse(localStorage.getItem('inProgressRecipes')) || [];
+  const [storageChecked, setStorageChecked] = useState(ingredientsChecked);
+  const [isDisabled, setIsDisabled] = useState(null);
 
   const location = useLocation();
   const history = useHistory();
@@ -79,12 +83,65 @@ export default function RecipeInProgress() {
   const copyURL = () => {
     setCopied(true);
     const { href } = window.location;
-    navigator.clipboard.writeText(href);
+    navigator.clipboard.writeText(href.split('/in-progress')[0]);
+  };
+
+  const allIngredientsChecked = () => {
+    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+    console.log(checkboxes);
+    let isChecked = false;
+
+    checkboxes.forEach((checkbox) => {
+      if (!checkbox.checked) {
+        isChecked = true;
+      }
+    });
+    setAllChecked(isChecked);
+    setIsDisabled(!isChecked);
+  };
+
+  const handleCheck = ({ target }) => {
+    if (target.checked) {
+      target.parentNode
+        .style.textDecoration = 'line-through solid rgb(0, 0, 0)';
+
+      ingredientsChecked.push(target.value);
+      localStorage
+        .setItem('inProgressRecipes', JSON.stringify(ingredientsChecked));
+      setStorageChecked(ingredientsChecked);
+    } else {
+      target.parentNode.style.textDecoration = 'none';
+    }
+    allIngredientsChecked();
+  };
+
+  const finishRecipe = () => {
+    const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
+    console.log(getDoneRecipes);
+    const recipeOBJ = {
+      id: recipe[0].idMeal || recipe[0].idDrink,
+      type: recipe[0].idMeal ? 'meal' : 'drink',
+      nationality: recipe[0].strArea || '',
+      category: recipe[0].strCategory,
+      alcoholicOrNot: recipe[0].strAlcoholic || '',
+      name: recipe[0].strMeal || recipe[0].strDrink,
+      image: recipe[0].strMealThumb || recipe[0].strDrinkThumb,
+      doneDate: new Date().toISOString(),
+      tags: pathname === 'meals' ? (recipe[0].strTags).split(',') : [],
+    };
+    localStorage
+      .setItem('doneRecipes', JSON.stringify([...getDoneRecipes, recipeOBJ]));
+    history.push('/done-recipes');
   };
 
   useState(() => {
     fetchByID();
+    setIsDisabled(null);
   }, []);
+
+  useState(() => {
+    allIngredientsChecked();
+  }, [ingredientsChecked]);
 
   return (
     <div>
@@ -123,23 +180,15 @@ export default function RecipeInProgress() {
             >
               <input
                 type="checkbox"
-                onChange={ ({ target }) => {
-                  if (target.checked) {
-                    target.parentNode
-                      .style.textDecoration = 'line-through solid rgb(0, 0, 0)';
-                    console.log(target);
-                  } else {
-                    target.parentNode.style.textDecoration = 'none';
-                  }
-                } }
+                checked={ storageChecked.includes(item[ingredient]) }
+                value={ item[ingredient] }
+                onChange={ handleCheck }
               />
-
               {item[ingredient]}
               {' '}
               -
               {' '}
               {item[`strMeasure${i + 1}`]}
-
             </label>
           ))}
           {item.strYoutube && (
@@ -154,7 +203,8 @@ export default function RecipeInProgress() {
           )}
           <button
             data-testid="finish-recipe-btn"
-            onClick={ () => history.push('/done-recipes') }
+            onClick={ () => finishRecipe() }
+            disabled={ allChecked || !isDisabled }
           >
             Finish Recipe
           </button>
