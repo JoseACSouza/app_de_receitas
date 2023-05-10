@@ -14,5 +14,6 @@ export default function renderWithRouter(component, initialRoute = '/') {
         </Router>
       </AppProvider>,
     ),
+    history,
   };
 }
