@@ -88,7 +88,6 @@ export default function RecipeInProgress() {
 
   const allIngredientsChecked = () => {
     const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-    console.log(checkboxes);
     let isChecked = false;
 
     checkboxes.forEach((checkbox) => {
@@ -117,7 +116,6 @@ export default function RecipeInProgress() {
 
   const finishRecipe = () => {
     const getDoneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) || [];
-    console.log(getDoneRecipes);
     const recipeOBJ = {
       id: recipe[0].idMeal || recipe[0].idDrink,
       type: recipe[0].idMeal ? 'meal' : 'drink',
@@ -134,9 +132,16 @@ export default function RecipeInProgress() {
     history.push('/done-recipes');
   };
 
+  const verifyIsFavorite = () => {
+    if (favorites.some((favorite) => favorite.id === recipeID)) {
+      setIsFavorite(true);
+    }
+  };
+
   useState(() => {
     fetchByID();
     setIsDisabled(null);
+    verifyIsFavorite();
   }, []);
 
   useState(() => {
@@ -154,13 +159,11 @@ export default function RecipeInProgress() {
           <button
             data-testid="favorite-btn"
             onClick={ favoriteRecipe }
-            src={ favorites.some((favorite) => favorite.id === (recipe[0].idMeal
-              || recipe[0].idDrink))
+            src={ isFavorite
               ? favoriteIconBlack : favoriteIcon }
           >
             <img
-              src={ favorites.some((favorite) => favorite.id === (recipe[0].idMeal
-                || recipe[0].idDrink))
+              src={ isFavorite
                 ? favoriteIconBlack : favoriteIcon }
               alt=""
             />
