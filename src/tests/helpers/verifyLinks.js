@@ -20,6 +20,7 @@ export const fetch = (url) => Promise.resolve({
       return Promise.resolve(allMeal);
     case allDrinksLink:
       return Promise.resolve(allDrinks);
+
     default:
       break;
     }

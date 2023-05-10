@@ -6,7 +6,7 @@ import App from '../App';
 
 const mealRoute = '/meals/52977';
 
-describe('Testando os requisitos relacionados ao requisito 5, cobertura de 30%', () => {
+describe('Testando os requisitos relacionados ao requisito 29, cobertura de 45%', () => {
   beforeEach(() => {
     jest.spyOn(global, 'fetch').mockImplementation(fetch);
   });
