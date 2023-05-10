@@ -111,8 +111,15 @@ export default function RecipeDetails() {
     navigator.clipboard.writeText(href);
   };
 
+  const verifyIsFavorite = () => {
+    if (favorites.some((favorite) => favorite.id === recipeID)) {
+      setIsFavorite(true);
+    }
+  };
+
   useEffect(() => {
     fetchByID();
+    verifyIsFavorite();
   }, []);
 
   return (
@@ -127,12 +134,10 @@ export default function RecipeDetails() {
             <button
               data-testid="favorite-btn"
               onClick={ favoriteRecipe }
-              src={ favorites.some((favorite) => favorite.id === recipe[0].idMeal)
-                ? favoriteIconBlack : favoriteIcon }
+              src={ isFavorite ? favoriteIconBlack : favoriteIcon }
             >
               <img
-                src={ favorites.some((favorite) => favorite.id === recipe[0].idMeal)
-                  ? favoriteIconBlack : favoriteIcon }
+                src={ isFavorite ? favoriteIconBlack : favoriteIcon }
                 alt=""
               />
             </button>
@@ -189,12 +194,10 @@ export default function RecipeDetails() {
             <button
               data-testid="favorite-btn"
               onClick={ favoriteRecipe }
-              src={ favorites.some((favorite) => favorite.id === recipe[0].idDrink)
-                ? favoriteIconBlack : favoriteIcon }
+              src={ isFavorite ? favoriteIconBlack : favoriteIcon }
             >
               <img
-                src={ favorites.some((favorite) => favorite.id === recipe[0].idDrink)
-                  ? favoriteIconBlack : favoriteIcon }
+                src={ isFavorite ? favoriteIconBlack : favoriteIcon }
                 alt=""
               />
             </button>
