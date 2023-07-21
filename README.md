@@ -5,9 +5,10 @@ CSS em desenvolvimento...
 Projeto desenvolvido com [Juliana](https://github.com/Junepa), [Eduardo Cardoso](https://github.com/edu-cardoso), [Lucas Silveira](https://github.com/lucasyuk1) e [Victor Almeida](https://github.com/vctalmeida).
 
 ## Tecnlogias utilizadas: 
+* JS
+* ReactJS
 * Jest
 * RTL
-* ReactJS
 * Redux
 * Context API
 <!-- Olá, Tryber!
