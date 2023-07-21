@@ -5,11 +5,11 @@ CSS em desenvolvimento...
 Projeto desenvolvido com [Juliana](https://github.com/Junepa), [Eduardo Cardoso](https://github.com/edu-cardoso), [Lucas Silveira](https://github.com/lucasyuk1) e [Victor Almeida](https://github.com/vctalmeida).
 
 ## Tecnlogias utilizadas: 
-*Jest
-*RTL
-*ReactJS
-*Redux
-*Context API
+* Jest
+* RTL
+* ReactJS
+* Redux
+* Context API
 <!-- Olá, Tryber!
 Esse é apenas um arquivo inicial para o README do seu projeto.
 É essencial que você preencha esse documento por conta própria, ok?
